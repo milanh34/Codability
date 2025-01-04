@@ -1,11 +1,13 @@
 {
   "name": "codability",
   "version": "1.0.0",
-  "main": "electron/main.js",
+  "main": "dist-electron/main.js",
   "scripts": {
-    "dev": "concurrently \"vite dev\" ",
-    "build": "vite build && electron-builder",
-    "make": "electron-builder",
+    "dev": "vite",
+    "build": "vite build",
+    "electron:dev": "vite build && electron .",
+    "make": "vite build && electron-builder",
+    "preview": "vite preview",
     "start": "electron .",
     "package": "electron-builder --dir"
   },
@@ -44,7 +46,7 @@
     "productName": "Codability",
     "files": [
       "dist/**/*",
-      "main.js"
+      "dist-electron/**/*"
     ],
     "asar": true,
     "win": {

@@ -1,28 +1,22 @@
 "use strict";
-const { app, BrowserWindow } = require("electron");
-const path = require("path");
-function createWindow() {
-  const win = new BrowserWindow({
-    width: 1e3,
-    height: 500,
-    webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-      preload: path.join(__dirname, "preload.js")
-    }
+const { app: e, BrowserWindow: o } = require("electron"),
+  i = require("path");
+function n() {
+  const t = new o({
+    width: 800,
+    height: 600,
+    webPreferences: { nodeIntegration: !0, contextIsolation: !1 },
   });
-  win.loadURL(
-    app.isPackaged ? `file://${path.join(__dirname, "..", "dist", "index.html")}` : "http://localhost:3000"
-  );
+  process.env.NODE_ENV === "development"
+    ? t.loadURL("http://localhost:3000")
+    : t.loadFile(i.join(__dirname, "../dist/index.html"));
 }
-app.whenReady().then(() => {
-  createWindow();
+e.whenReady().then(() => {
+  n(),
+    e.on("activate", () => {
+      o.getAllWindows().length === 0 && n();
+    });
 });
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
-app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+e.on("window-all-closed", () => {
+  process.platform !== "darwin" && e.quit();
 });

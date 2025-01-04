@@ -7,11 +7,20 @@ export default defineConfig({
     viteReact(),
     electron({
       entry: "electron/main.js",
+      vite: {
+        build: {
+          outDir: "dist-electron",
+          rollupOptions: {
+            external: ["electron"]
+          }
+        }
+      }
     }),
   ],
   build: {
     target: "esnext",
     outDir: "dist",
+    emptyOutDir: true,
   },
   resolve: {
     alias: {

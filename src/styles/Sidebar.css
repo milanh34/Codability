@@ -1,0 +1,403 @@
+.sidebar {
+  width: 250px;
+  min-height: 91vh;
+  max-height: 91vh;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  user-select: none;
+}
+
+.sidebar.vertical {
+  flex-direction: column;
+  width: 4rem;
+  padding: 1.25rem 0;
+  align-items: center;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.sidebar.horizontal {
+  flex-direction: row;
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  justify-content: start;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sidebar.horizontal .sidebar-buttons {
+  flex-direction: row;
+  gap: 1.75rem;
+}
+
+.sidebar-button {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background-color: transparent;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-button:hover {
+  transform: translateY(-1px);
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.sidebar-button-active {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.sidebar-button-active::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 25%;
+  width: 50%;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
+.sidebar-button-inactive {
+  opacity: 0.7;
+}
+
+.sidebar-button-inactive:hover {
+  opacity: 0.9;
+}
+
+.sidebar-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  position: relative;
+  z-index: 2;
+}
+
+.sidebar-explorer {
+  width: 100%;
+  height: 30%;
+}
+
+.explorer-header {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+.explorer-content {
+  padding: 0.5rem 0;
+}
+
+.section-header {
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.folder-section {
+  width: 100%;
+  height: 90%;
+  overflow-y: auto;
+}
+
+.folder-header {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: var(--text-normal);
+  gap: 4px;
+  font-size: 13px;
+}
+
+.folder-header:hover {
+  background-color: var(--bg-hover);
+}
+
+.folder-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.folder-header:hover .folder-actions {
+  opacity: 1;
+}
+
+.action-button {
+  padding: 2px;
+  background: none;
+  border: none;
+  color: var(--text-normal);
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-button:hover {
+  background-color: var(--bg-hover-intense);
+}
+
+.file-list {
+  padding: 4px 0;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px 4px 24px;
+  cursor: pointer;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-normal);
+  border-left: 2px solid transparent;
+}
+
+.file-item:hover {
+  background-color: var(--bg-hover);
+}
+
+.file-item.active {
+  background-color: var(--bg-selected);
+  border-left-color: var(--accent-color);
+}
+
+.file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty-message {
+  padding: 8px 24px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* Scrollbar styling */
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+/* CSS Variables - Add these to your root/theme */
+:root {
+  --bg-sidebar: var(--theme-sidebar-bg, #ffffff);
+  --bg-hover: var(--theme-hover-bg, rgba(0, 0, 0, 0.05));
+  --bg-hover-intense: var(--theme-hover-intense-bg, rgba(0, 0, 0, 0.08));
+  --bg-selected: var(--theme-selected-bg, rgba(0, 0, 0, 0.06));
+  --text-normal: var(--theme-text, #1E293B);
+  --text-muted: var(--theme-muted, #64748B);
+  --border-color: var(--theme-border, #E2E8F0);
+  --accent-color: var(--theme-accent, #2563EB);
+  --scrollbar-thumb: var(--theme-scrollbar, #CBD5E1);
+  --scrollbar-thumb-hover: var(--theme-scrollbar-hover, #94A3B8);
+}
+
+.command-log-section {
+  margin-top: 16px;
+  border-top: 1px solid var(--border-color);
+  transition: background-color 0.3s ease;
+  height: 40%;
+}
+
+.command-logs {
+  font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+  margin-top: 8px;
+  padding: 8px;
+  transition: all 0.3s ease;
+}
+
+.log-entry {
+  padding: 6px 8px;
+  margin: 4px 0;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  animation: slideIn 0.3s ease-out;
+}
+
+.log-entry:hover {
+  background-color: var(--bg-hover);
+  transform: translateX(4px);
+}
+
+.voice-commands-footer {
+  padding: 12px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-sidebar);
+  transition: all 0.3s ease;
+  height: 20%;
+}
+
+.command-hint {
+  padding: 8px 12px;
+  margin: 4px 0;
+  border-radius: 6px;
+  background: var(--bg-selected);
+  transition: all 0.3s ease;
+  animation: popWiggle 3s ease-in-out infinite;
+}
+
+.command-hint:nth-child(odd) {
+  animation: slideFromLeft 0.5s ease-out, popWiggle 3s ease-in-out infinite;
+}
+
+.command-hint:nth-child(even) {
+  animation: slideFromRight 0.5s ease-out, popWiggle 3s ease-in-out infinite;
+}
+
+.command-hint:hover {
+  transform: translateX(4px);
+  background: var(--bg-hover-intense);
+}
+
+.command-hint-text {
+  font-size: 13px;
+  color: var(--text-normal);
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.command-hint-description {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes popWiggle {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02) rotate(1deg);
+  }
+  75% {
+    transform: scale(1.01) rotate(-1deg);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(96, 165, 250, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(96, 165, 250, 0.4);
+  }
+}
+
+/* Dark mode overrides */
+[data-theme="dark"] {
+  --bg-sidebar: #1E293B;  /* Lighter background */
+  --bg-hover: rgba(255, 255, 255, 0.15);  /* More visible hover */
+  --bg-hover-intense: rgba(255, 255, 255, 0.2);
+  --bg-selected: rgba(96, 165, 250, 0.25);  /* Blue tinted selection */
+  --text-normal: #FFFFFF;  /* Much brighter text */
+  --text-muted: #E2E8F0;   /* Much brighter muted text */
+  --border-color: #475569; /* More visible borders */
+  --accent-color: #60A5FA;
+  --scrollbar-thumb: #64748B;
+  --scrollbar-thumb-hover: #94A3B8;
+}
+
+[data-theme="dark"] .file-item {
+  color: #FFFFFF; /* Force brighter text for files */
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2); /* Add subtle shadow for better readability */
+  background-color: rgba(255, 255, 255, 0.03);
+  margin: 2px 0;
+  border-radius: 4px;
+}
+
+[data-theme="dark"] .file-item:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Brighter hover state */
+  color: #FFFFFF; /* Pure white on hover */
+  transform: translateX(4px);
+}
+
+[data-theme="dark"] .file-item.active {
+  background-color: rgba(96, 165, 250, 0.2); /* More visible active state */
+  border-left-color: #60A5FA;
+  color: #FFFFFF; /* Pure white for active file */
+  animation: glowPulse 2s infinite;
+}

@@ -1,0 +1,66 @@
+/* ThemeSelector.css */
+.theme-selector {
+  position: relative;
+}
+
+.theme-selector:hover .theme-dropdown {
+  opacity: 1;
+  visibility: visible;
+}
+
+.theme-selector-button {
+  padding: 0.625rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.theme-selector-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.theme-selector-button .icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  stroke-width: 2px;
+}
+
+.theme-dropdown {
+  position: absolute;
+  right: 0;
+  margin-top: 0.5rem;
+  width: 13rem;
+  padding: 0.5rem;
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  z-index: 50;
+}
+
+.theme-option {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.theme-option:hover {
+  background-color: #f8fafc;
+}
+
+.theme-option.active {
+  background-color: #f1f5f9;
+  font-weight: 500;
+}

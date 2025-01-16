@@ -1,0 +1,282 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  width: 70vw;
+  height: 65vh;
+  min-width: unset;
+  max-width: unset;
+  max-height: unset;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  border: 1px solid;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  transform-origin: center;
+  animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.modal-close:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.modal-body {
+  flex: 1;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* exactly 3 columns */
+  grid-template-rows: repeat(auto-fill, 1fr);
+  gap: 24px;
+  padding: 24px;
+  width: 100%;
+  height: fit-content;
+  overflow-y: auto;
+}
+
+.file-card {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  backdrop-filter: blur(8px);
+}
+
+.file-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    var(--theme-gradient-start),
+    var(--theme-gradient-end)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.file-card:hover::before {
+  opacity: 0.1;
+}
+
+.file-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--theme-accent);
+  background: var(--theme-accent-bg);
+}
+
+.file-icon {
+  font-size: 1rem;
+  margin-right: 12px;
+  transform-origin: center;
+  transition: transform 0.3s ease;
+  opacity: 0.7;
+  width: 20px;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.file-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--theme-accent);
+  color: var(--theme-accent-text);
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.file-card:hover .file-icon-wrapper {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.file-name-section {
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.file-extension {
+  display: none;
+}
+
+.file-action {
+  color: var(--theme-accent);
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.file-card:hover .file-action {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.file-card.selected {
+  animation: selectFile 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes selectFile {
+  0% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1.2);
+  }
+  100% {
+    transform: translateY(10px) scale(0.95);
+    opacity: 0;
+  }
+}
+
+@keyframes fileAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.file-type-indicator {
+  position: absolute;
+  left: -1px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--file-accent-color);
+  transform: scaleY(0);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.file-card:hover .file-type-indicator {
+  transform: scaleY(1);
+  opacity: 1;
+}
+
+.file-meta,
+.file-date,
+.emoji-decoration,
+.emoji-left,
+.emoji-right,
+.file-indicator {
+  display: none;
+}
+
+@keyframes modalPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Add new scrollbar styling */
+.file-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.file-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.file-grid::-webkit-scrollbar-thumb {
+  background: var(--file-accent-color);
+  opacity: 0.3;
+  border-radius: 4px;
+}
+
+.file-grid::-webkit-scrollbar-thumb:hover {
+  opacity: 0.5;
+}
+
+/* Update media query for smaller screens */
+@media (max-width: 1200px) {
+  .file-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+  }
+}

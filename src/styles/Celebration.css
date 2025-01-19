@@ -1,0 +1,38 @@
+.celebration-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+  
+  .celebration-icons {
+    display: flex;
+    gap: 1.5rem;
+    animation: bounce-and-spin 1.5s infinite;
+  }
+  
+  .celebration-icon {
+    width: 4rem;
+    height: 4rem;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+  }
+  
+  @keyframes bounce-and-spin {
+    0%, 100% {
+      transform: translateY(-25%) rotate(0deg);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    25% {
+      transform: translateY(0) rotate(5deg);
+    }
+    50% {
+      transform: translateY(0) rotate(0deg);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+    75% {
+      transform: translateY(0) rotate(-5deg);
+    }
+  }

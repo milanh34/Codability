@@ -1,7 +1,47 @@
+/* IDE.css */
 .ide-container {
+  min-height: 100vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+.ide-content {
+  display: flex;
+  flex: 1;
+  min-height: 91vh;
+  max-height: 91vh;
+}
+
+.ide-content.vertical {
+  flex-direction: row;
+}
+
+.ide-content.horizontal {
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-output-container {
+  flex: 1;
+  padding: 1rem;
+}
+
+.editor-output-flex {
   height: 100%;
-  justify-content: center;
-  align-items: center;
+  display: flex;
+  gap: 1rem;
+}
+
+.editor-output-flex.vertical {
+  flex-direction: row;
+}
+
+.editor-output-flex.horizontal {
+  flex-direction: column;
 }

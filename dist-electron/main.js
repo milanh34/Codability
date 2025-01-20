@@ -1,22 +1,31 @@
 "use strict";
-const { app: e, BrowserWindow: o } = require("electron"),
-  i = require("path");
-function n() {
-  const t = new o({
+const { app, BrowserWindow } = require("electron");
+const path = require("path");
+function createWindow() {
+  const win = new BrowserWindow({
     width: 800,
     height: 600,
-    webPreferences: { nodeIntegration: !0, contextIsolation: !1 },
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
   });
-  process.env.NODE_ENV === "development"
-    ? t.loadURL("http://localhost:3000")
-    : t.loadFile(i.join(__dirname, "../dist/index.html"));
+  if (process.env.NODE_ENV === "development") {
+    win.loadURL("http://localhost:3000");
+  } else {
+    win.loadFile(path.join(__dirname, "../dist/index.html"));
+  }
 }
-e.whenReady().then(() => {
-  n(),
-    e.on("activate", () => {
-      o.getAllWindows().length === 0 && n();
-    });
+app.whenReady().then(() => {
+  createWindow();
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
 });
-e.on("window-all-closed", () => {
-  process.platform !== "darwin" && e.quit();
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
 });

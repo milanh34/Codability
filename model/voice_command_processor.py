@@ -14,23 +14,27 @@ def debug_print(message):
     sys.stderr.flush()
 
 
-def load_mappings():
+def load_json(file_name):
     try:
-        actions_path = os.path.join(os.path.dirname(__file__), 'actions_mapping.json')
-        commands_path = os.path.join(os.path.dirname(__file__), 'command_mapping.json')
-
-        debug_print(f"Loading mappings from {actions_path} and {commands_path}")
-
-        with open(actions_path, 'r') as f:
-            actions = json.load(f)
-        with open(commands_path, 'r') as f:
-            commands = json.load(f)
-
-        debug_print(f"Loaded {len(actions['actions'])} actions and {len(commands['commands'])} commands")
-        return actions, commands
+        path = os.path.join(os.path.dirname(__file__), file_name)
+        with open(path, 'r') as f:
+            return json.load(f)
     except Exception as e:
-        debug_print(f"Error loading mappings: {str(e)}")
-        return {"actions": {}}, {"commands": []}
+        debug_print(f"Error loading {file_name}: {str(e)}")
+        return None
+
+
+def load_mappings():
+    actions = load_json('actions_mapping.json')
+    commands = load_json('command_mapping.json')
+
+    if not actions:
+        actions = {"actions": {}}
+    if not commands:
+        commands = {"commands": []}
+
+    debug_print(f"Mappings loaded: {len(actions['actions'])} actions, {len(commands['commands'])} commands")
+    return actions, commands
 
 
 action_mapping, command_mapping = load_mappings()
@@ -43,27 +47,21 @@ def speak(text):
 
 
 def listen():
-    debug_print("Initializing recognizer")
+    debug_print("Listening started")
     recognizer = sr.Recognizer()
-
     try:
         with sr.Microphone() as source:
-            debug_print("Adjusting for ambient noise")
             recognizer.adjust_for_ambient_noise(source)
-            debug_print("Listening for command...")
+            debug_print("Ambient noise adjusted")
             audio = recognizer.listen(source)
             command = recognizer.recognize_google(audio).lower()
-            debug_print(f"Recognized command: {command}")
+            debug_print(f"Recognized: {command}")
             return command
-
-    except sr.UnknownValueError:
-        debug_print("Speech Recognition could not understand audio")
-        return None
-    except sr.RequestError as e:
-        debug_print(f"Speech Recognition error: {str(e)}")
+    except (sr.UnknownValueError, sr.RequestError) as e:
+        debug_print(f"Recognizer error: {str(e)}")
         return None
     except Exception as e:
-        debug_print(f"Unexpected error: {str(e)}")
+        debug_print(f"Listen error: {str(e)}")
         return None
 
 
@@ -77,14 +75,14 @@ class VoiceCommandMode:
 
     def start_coding_mode(self):
         self.coding_mode = True
-        debug_print("Starting coding mode")
+        debug_print("Switching to coding mode")
         speak("Coding mode activated")
         print("MODE_CHANGE:START_CODING")
         sys.stdout.flush()
 
     def stop_coding_mode(self):
         self.coding_mode = False
-        debug_print("Stopping coding mode")
+        debug_print("Switching to command mode")
         speak("Coding mode deactivated")
         print("MODE_CHANGE:STOP_CODING")
         sys.stdout.flush()
@@ -93,32 +91,35 @@ class VoiceCommandMode:
 command_mode = VoiceCommandMode()
 
 
+def process_action(action):
+    if action == "START_CODE_MODE":
+        command_mode.start_coding_mode()
+        return None
+    elif action == "STOP_CODE_MODE":
+        command_mode.stop_coding_mode()
+        return None
+    else:
+        print(f"Command matched:{action}")
+        sys.stdout.flush()
+        return action
+
+
 def map_command_to_c_code(command):
     debug_print(f"Mapping command: {command}")
 
     try:
         if command in action_mapping["actions"]:
             action = action_mapping["actions"][command]
-            debug_print(f"Action matched: {action}")
-
-            if action == "START_CODE_MODE":
-                command_mode.start_coding_mode()
-                return None
-            elif action == "STOP_CODE_MODE":
-                command_mode.stop_coding_mode()
-                return None
-
-            print(f"Command matched:{action}")
-            sys.stdout.flush()
-            return action
+            debug_print(f"Found action mapping: {action}")
+            return process_action(action)
 
         if command_mode.is_coding_mode():
-            debug_print("In coding mode, trying code templates")
+            debug_print("Checking coding templates")
             for item in command_mapping["commands"]:
                 try:
                     match = re.match(item["pattern"], command)
                     if match:
-                        debug_print(f"Regex matched: {item['pattern']}")
+                        debug_print(f"Matched pattern: {item['pattern']}")
                         c_code = item["template"]
                         for i, group in enumerate(match.groups(), start=1):
                             c_code = c_code.replace(f"${i}", group)
@@ -126,7 +127,7 @@ def map_command_to_c_code(command):
                         sys.stdout.flush()
                         return c_code
                 except Exception as e:
-                    debug_print(f"Error in pattern matching: {str(e)}")
+                    debug_print(f"Regex error: {str(e)}")
                     continue
 
             print("NO_MATCH:Command not recognized in coding mode")
@@ -137,7 +138,7 @@ def map_command_to_c_code(command):
 
         return None
     except Exception as e:
-        debug_print(f"Error in map_command_to_c_code: {str(e)}")
+        debug_print(f"Mapping error: {str(e)}")
         print(f"SYSTEM_MSG:Error processing command: {str(e)}")
         sys.stdout.flush()
         return None
@@ -160,7 +161,7 @@ def handle_nested_command():
             c_code = map_command_to_c_code(command)
             if c_code:
                 if "$INNER" in c_code:
-                    debug_print("Found nested structure, recursing")
+                    debug_print("Nested block found")
                     inner_nested_code = handle_nested_command()
                     c_code = c_code.replace("$INNER", "\n".join(inner_nested_code))
                 inner_code.append(c_code)
@@ -173,7 +174,7 @@ def handle_nested_command():
 
 
 def main():
-    debug_print("Main function starting")
+    debug_print("Voice assistant started")
     print("SYSTEM_MSG:Voice recognition started")
     sys.stdout.flush()
 
@@ -187,10 +188,10 @@ def main():
 
                 code = map_command_to_c_code(command)
                 if code is None:
-                    debug_print("No code generated, probably mode switch")
+                    debug_print("No code generated or mode switched")
                     continue
         except Exception as e:
-            debug_print(f"Error in main loop: {str(e)}")
+            debug_print(f"Main loop error: {str(e)}")
             print(f"SYSTEM_MSG:Error in voice recognition: {str(e)}")
             sys.stdout.flush()
             continue
